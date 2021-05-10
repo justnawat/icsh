@@ -14,9 +14,17 @@
 using namespace std;
 
 // MILESTONE 1
-string command; // the whole line of the input command
-const char * ccmd; // the whole line of the input command but in C-style string form
-char * word; // for each word of command line
-ofstream prevcmd; // saves the previous command
-int exit_code; // saves the exit code
-char * lastout;
+string commandLine; // the whole line of the input command
+string command;
+int exit_code;
+string oldLine;
+ofstream prevcmdw;
+ifstream prevcmdr;
+
+/* REFERENCES
+- https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
+- https://www.geeksforgeeks.org/comparing-two-strings-cpp/
+- https://www.tutorialspoint.com/cplusplus/cpp_strings.htm
+- https://stackoverflow.com/questions/11821491/converting-string-to-cstring-in-c
+- https://www.bitdegree.org/learn/string-to-int-c-plus-plus
+*/

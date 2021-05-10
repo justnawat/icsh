@@ -11,47 +11,53 @@ int main() {
     cout << "icsh $ ";
 
     while (1) {
-        getline(cin, command); // gets the whole line of the command as string
-        // ofstream prevcmdw(".last_command.txt"); // opens the file to write the command
-
-        ccmd = command.c_str(); // converts the command C++ string into a C-style string
-        word = strtok((char *) ccmd, " "); // get a word from the command line
+        getline(cin, commandLine); // gets the whole line of the command as string
+        
+        stringstream word(commandLine); // makes the line of the command a stream of strings
+        word >> command; // puts the content of word into command
+        if (command != "!!") { // if the command is not !!
+            prevcmdw.open(".last_command.txt"); // writes to hidden file that saves prev commands
+            prevcmdw << commandLine << endl; // writes the whole line of the command to the file
+        } else { // the command is !!
+            prevcmdr.open(".last_command.txt"); // read from the hidden file
+        }
 
         // THE ECHO COMMAND
-        if (strcmp(word, "echo") == 0) { // if the first word of the line is echo
-            word = strtok(NULL, " "); // skips the first word (yes, i know)
-            while (word != NULL) {
-                cout << word << " ";
-                word = strtok(NULL, " ");
+        if (command == "echo") {
+            while (word >> command) { // as long as there are strings left
+                cout << command << " "; // prints it out on screen
+                prevcmdw << command << " "; // put it in the hidden file
             }
-            cout << endl << "icsh $ "; // ends command and prompts for a new one
-        } 
+            prevcmdw.close(); // close the file
+            cout << endl << "icsh $ "; // prompts user for the next command
+        }
 
         // THE !! COMMAND
-        else if (strcmp(word, "!!") == 0) {
-            cout << prevcmd << endl << "icsh $ ";
+        else if (command == "!!") {
+            while (getline(prevcmdr, oldLine)) { // gets a line from the hidden file
+                cout << oldLine << endl; // prints out the line
+            }
+            prevcmdr.close(); // closes the file
+            cout << "icsh $ "; // prompts for next command
         }
 
         // THE EXIT COMMAND
-        else if (strcmp(word, "exit") == 0) {
-            word = strtok(NULL, " ");
-            cout << "[Sarcastic voice] Bye bye, I hope we meet again!\n";
-            exit_code = atoi(word) & 0xff;
-            cout << "Exit code: " << exit_code << endl;
-            return exit_code;
+        else if (command == "exit") {
+            prevcmdw.close(); // closes the file
+            if (word >> command) exit_code = stoi(command) & 0xff; // exit code specified
+            else exit_code = 0;
+            remove(".last_command.txt"); // delete the previous command file
+            exit(exit_code); // exits with the exit code
         }
 
         // BAD COMMAND
-        else cout << "BAD COMMAND" << endl << "icsh $ ";
+        else {
+            prevcmdw << "BAD COMMAND"; // writes to the file that the last command is a bad one
+            cout << "BAD COMMAND" << endl << "icsh $ ";
+            prevcmdw.close(); // closes the file
+        }
     }
 
     return 0;
 }
 
-/* REFERENCES
-- https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
-- https://www.tutorialspoint.com/c-program-to-check-if-two-strings-are-same-or-not
-- https://www.tutorialspoint.com/cplusplus/cpp_strings.htm
-- https://stackoverflow.com/questions/11821491/converting-string-to-cstring-in-c
-- https://blog.udemy.com/c-string-to-int/
-*/
