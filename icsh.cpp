@@ -34,8 +34,16 @@ int main() {
 
         // THE !! COMMAND
         else if (command == "!!") {
-            while (getline(prevcmdr, oldLine)) { // gets a line from the hidden file
-                cout << oldLine << endl; // prints out the line
+            if (getline(prevcmdr, oldLine)) { // prev command exists
+                if (oldLine.length() == 0) cout << "icsh: !!: event not found" << endl;
+                else {
+                    cout << oldLine << endl;
+                    while (getline(prevcmdr, oldLine)) { // gets a line from the hidden file
+                        cout << oldLine << endl; // prints out the line
+                    }
+                }
+            } else {
+                cout << "icsh: !!: event not found" << endl;
             }
             prevcmdr.close(); // closes the file
             cout << "icsh $ "; // prompts for next command
@@ -47,7 +55,14 @@ int main() {
             if (word >> command) exit_code = stoi(command) & 0xff; // exit code specified
             else exit_code = 0;
             remove(".last_command.txt"); // delete the previous command file
+            cout << "exit\n";
             exit(exit_code); // exits with the exit code
+        }
+
+        // EMPTY COMMAND
+        else if (command.length() == 0) {
+            prevcmdw.close();
+            cout << "icsh $ ";
         }
 
         // BAD COMMAND
