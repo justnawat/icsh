@@ -24,7 +24,7 @@ ifstream prevcmdr;
 // MILESTONE 2
 ifstream script; // the script file
 int i;
-int runMode; // 0 for interactive, 1 for script
+int runMode; // 0 for interactive, 1 for script 
 
 /* REFERENCES
 - https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
