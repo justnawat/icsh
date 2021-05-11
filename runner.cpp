@@ -48,7 +48,7 @@ int command_run(string commandLine, int mode) {
     }
 
     // EMPTY COMMAND
-    else if (command.length() == 0) {
+    else if ((command.substr(0, 1) == "\n") || (command.length() == 0)) {
         prevcmdw.close();
     }
 
