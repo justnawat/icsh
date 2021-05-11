@@ -1,5 +1,5 @@
 CXX = g++
 CXXFLAGS = -g -Wall
 
-all: icsh.cpp icsh.h
+all: icsh.h icsh.cpp runner.cpp
 	$(CXX) $(CXXFLAGS) icsh.cpp -o icsh

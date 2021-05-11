@@ -21,10 +21,16 @@ string oldLine;
 ofstream prevcmdw;
 ifstream prevcmdr;
 
+// MILESTONE 2
+ifstream script; // the script file
+int i;
+int runMode; // 0 for interactive, 1 for script
+
 /* REFERENCES
 - https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
 - https://www.geeksforgeeks.org/comparing-two-strings-cpp/
 - https://www.tutorialspoint.com/cplusplus/cpp_strings.htm
 - https://stackoverflow.com/questions/11821491/converting-string-to-cstring-in-c
 - https://www.bitdegree.org/learn/string-to-int-c-plus-plus
+- https://www.geeksforgeeks.org/substring-in-cpp/
 */
