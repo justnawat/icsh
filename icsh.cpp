@@ -42,6 +42,8 @@ int main() {
 					while (getline(prevcmdr, oldLine)) {
 						cout << oldLine << endl;
 					}
+				} else {
+					cout << "icsh: command not found\n";
 				}
 				
 				prevcmdr.close();
