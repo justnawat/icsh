@@ -20,3 +20,7 @@ int exit_code;
 string oldLine;
 ofstream prevcmdw;
 ifstream prevcmdr;
+
+// MILESTONE 2
+ifstream script;
+int i;

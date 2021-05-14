@@ -1,4 +1,5 @@
 #include "icsh.h"
+#include "command.cpp"
 
 string trim(string st) {
 	while (st.substr(0, 1) == " ") {
@@ -8,62 +9,45 @@ string trim(string st) {
 	return st;
 }
 
-int main() {
-	cout << "Initiliazing IC Shell...\n";
-	cout << "icsh $ ";
+int main(int argc, char * argv[]) {
+	if (argc == 1) { // runs in interactive mode
+		cout << "Initiliazing IC Shell...\n";
+		cout << "icsh $ ";
 
-	while (1) {
-		getline(cin, commandLine); // get a line from the command line
-		if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine); // trim leading spaces
-		if (commandLine.length() == 0) { // empty command
-			cout << "icsh $ ";
-		} 
+		while (1) {
+			getline(cin, commandLine); // get a line from the command line
+			if(commandLine.length() == 0) {
+				cout << "icsh $ ";
+				continue;
+			}
 
-		else { // not empty command
-			stringstream word(commandLine); // make the command line into a stream of strings
-			word >> command;
+			if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine); // trim leading spaces
 
-			if (command == "echo") { // echo command
-				prevcmdw.open(".pcmd.txt");
-				prevcmdw << commandLine << endl;
-
-				while (word >> command) {
-					cout << command << " ";
-					prevcmdw << command << " ";
-				}
-
-				prevcmdw.close();
-				cout << endl  << "icsh $ ";
-			} 
-
-			else if (command == "!!") { // repeat command
-				prevcmdr.open(".pcmd.txt");
-				if (prevcmdr.is_open()) {
-					while (getline(prevcmdr, oldLine)) {
-						cout << oldLine << endl;
-					}
-				} else {
-					cout << "icsh: command not found\n";
-				}
-				
+			else { // not empty command
+				run(commandLine, 0);
+			}
+		}
+	} else { // runs in script mode
+		script.open(argv[1]);
+		if (!script.is_open()) {
+			cout << "icsh: script not found\n";
+			exit(127);
+		} else {
+			while (getline(script, commandLine)) {
+				if (commandLine.length() == 0) continue;
+				if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine);
+				if (commandLine.substr(0, 1) == "#") continue; // skips comments
+				run(commandLine, 1);
+			}
+			
+			// deleting the previous command file
+			prevcmdr.open(".pcmd.txt");
+			if (prevcmdr.is_open()) {
 				prevcmdr.close();
-				cout << "icsh $ ";
-			} 
-
-			else if (command == "exit") { // exit command
-				if (word >> command) exit_code = stoi(command) & 0xff;
-				else exit_code = 0;
 				remove(".pcmd.txt");
-				exit(exit_code);
 			}
 
-			else {
-				prevcmdw.open(".pcmd.txt");
-				prevcmdw << commandLine << endl << "icsh: bad command\n";
-				prevcmdw.close();
-				cout << "icsh: bad command\n";
-				cout << "icsh $ ";
-			}
+			exit(0);
 		}
 	}
 
