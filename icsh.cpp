@@ -57,7 +57,7 @@ int main() {
 
 			else {
 				prevcmdw.open(".pcmd.txt");
-				prevcmdw << commandLine << "icsh: bad command\n";
+				prevcmdw << commandLine << endl << "icsh: bad command\n";
 				prevcmdw.close();
 				cout << "icsh: bad command\n";
 				cout << "icsh $ ";
