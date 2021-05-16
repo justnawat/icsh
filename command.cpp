@@ -43,7 +43,7 @@ void run(string commandLine, int mode) {
 
 	else {
 		if (mode == 0) { // only indicates that there is a bad command only if it's in interactive mode (or I'd go crazy otherwise)
-			prevcmdw << commandLine << endl;
+			prevcmdw << "icsh: bad command\n";
 			cout << "icsh: bad command\n";
 			cout << "icsh $ ";
 		}
