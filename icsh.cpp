@@ -12,12 +12,12 @@ string trim(string st) {
 int main(int argc, char * argv[]) {
 	if (argc == 1) { // runs in interactive mode
 		cout << "Initiliazing IC Shell...\n";
-		cout << "icsh $ ";
+		cout << prompt;
 
 		while (1) {
 			getline(cin, commandLine); // get a line from the command line
 			if(commandLine.length() == 0) {
-				cout << "icsh $ ";
+				cout << prompt;
 				continue;
 			}
 
@@ -41,7 +41,8 @@ int main(int argc, char * argv[]) {
 			}
 			
 			// deleting the previous command file
-			prevcmdr.open(".pcmd.txt");
+			// just in case that there's no exit call in the script
+            prevcmdr.open(".pcmd.txt");
 			if (prevcmdr.is_open()) {
 				prevcmdr.close();
 				remove(".pcmd.txt");
