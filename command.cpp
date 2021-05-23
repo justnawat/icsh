@@ -44,29 +44,28 @@ void my_exit(string commandLine, int mode) {
     exit(exit_code);
 }
 
+void f_ex(string commandLine) {
+    pid_t pid = fork();
+    if (pid < 0) {
+        cout << "icsh: forking failed\n";
+    } else if (pid == 0) {
+        exe(commandLine);
+        // only if the exec command doesn't work
+        cout << "icsh: command not found\n";
+        exit(127);
+    } else {
+        pause();
+        // DO SOMETHING
+    }
+}
+
 void dbrun(string commandLine, int mode) {
 	stringstream word(commandLine);
 	word >> command;
 	if (command == "echo") echo(commandLine);
 	else if (command == "exit") my_exit(commandLine, mode);
-	else { // will run external commands
-		pid_t pid = fork();
-
-		if (pid < 0) { // fork failed
-			cout << "icsh: forking failed\n";
-		} 
-		else if (pid == 0) { // child process
-			exe(commandLine);
-
-            // only for if the exec command fails
-			cout << "icsh: command not found\n";
-			exit(127);
-		}
-		else { // parent process
-			waitpid(pid, NULL, 0);
-		}
-    }	
-}
+	else f_ex(commandLine); // will run external commands
+}	
 
 void doubleBang(int mode) {
     if (prevcmdr.is_open()) {
@@ -93,23 +92,6 @@ void run(string commandLine, int mode) {
 	if (command == "echo") echo(commandLine);
 	else if (command == "!!") doubleBang(mode);
 	else if (command == "exit") my_exit(commandLine, mode);
-	else { // will run external commands
-		pid_t pid = fork();
-
-		if (pid < 0) { // fork failed
-			cout << "icsh: forking failed\n";
-		} 
-		else if (pid == 0) { // child process
-			exe(commandLine);
-
-            // only for if the exec command fails
-			cout << "icsh: command not found\n";
-			exit(127);
-		}
-		else { // parent process
-            int status;
-			waitpid(pid, &status, 0);
-		}
-	}
+    else f_ex(commandLine); // for external commands
     if (mode == 0) cout << prompt;
 }

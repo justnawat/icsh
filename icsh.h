@@ -16,6 +16,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <cerrno>
+
+// DEALING WITH SIGNALS
+#include <signal.h>
+
 using namespace std;
 
 // MILESTONE 1

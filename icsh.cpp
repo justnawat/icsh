@@ -9,7 +9,44 @@ string trim(string st) {
 	return st;
 }
 
+
+void int_handler(int signum) {
+}
+
+void stop_handler(int signum) {
+}
+
+void chld_handler(int signum) {
+}
+
 int main(int argc, char * argv[]) {
+    // signal handling
+    struct sigaction old_action;
+
+    // for SIGINT
+    struct sigaction sigint_action;
+    sigint_action.sa_handler = int_handler;
+    sigemptyset(&sigint_action.sa_mask);
+    sigint_action.sa_flags = 0;
+    sigaction(SIGINT, NULL, &old_action);
+    if (old_action.sa_handler != SIG_IGN) sigaction(SIGINT, &sigint_action, NULL);
+    
+    // for SIGSTOP
+    struct sigaction sigstop_action;
+    sigstop_action.sa_handler = stop_handler;
+    sigemptyset(&sigstop_action.sa_mask);
+    sigstop_action.sa_flags = 0; 
+    sigaction(SIGSTOP, NULL, &old_action);
+    if (old_action.sa_handler != SIG_IGN) sigaction(SIGSTOP, &sigstop_action, NULL);
+    
+    // for SIGCHLD
+    struct sigaction sigchld_action;
+    sigchld_action.sa_handler = chld_handler;
+    sigemptyset(&sigchld_action.sa_mask);
+    sigchld_action.sa_flags = 0;
+    sigaction(SIGCHLD, NULL, &old_action);
+    if (old_action.sa_handler != SIG_IGN) sigaction(SIGCHLD, &sigchld_action, NULL);
+
 	if (argc == 1) { // runs in interactive mode
 		cout << "Initiliazing IC Shell...\n";
 		cout << prompt;
