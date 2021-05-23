@@ -9,43 +9,37 @@ string trim(string st) {
 	return st;
 }
 
-
 void int_handler(int signum) {
+	cout << "icsh: please exit shell properly and use the exit command.\n";
 }
 
 void stop_handler(int signum) {
-}
-
-void chld_handler(int signum) {
+	cout << "icsh: shell cannot be suspended\n";
 }
 
 int main(int argc, char * argv[]) {
-    // signal handling
-    struct sigaction old_action;
+    // default handling just setting up
+	default_action.sa_handler = SIG_DFL;
+	sigemptyset(&default_action.sa_mask);
+	default_action.sa_flags = 0;
+
+	// for ignore
+	ignore.sa_handler = SIG_IGN;
+	sigemptyset(&ignore.sa_mask);
+	ignore.sa_flags = 0;
+	sigaction(SIGTTOU, &ignore, NULL);
 
     // for SIGINT
-    struct sigaction sigint_action;
     sigint_action.sa_handler = int_handler;
     sigemptyset(&sigint_action.sa_mask);
     sigint_action.sa_flags = 0;
-    sigaction(SIGINT, NULL, &old_action);
-    if (old_action.sa_handler != SIG_IGN) sigaction(SIGINT, &sigint_action, NULL);
+	sigaction(SIGINT, &sigint_action, NULL);
     
-    // for SIGSTOP
-    struct sigaction sigstop_action;
-    sigstop_action.sa_handler = stop_handler;
-    sigemptyset(&sigstop_action.sa_mask);
-    sigstop_action.sa_flags = 0; 
-    sigaction(SIGSTOP, NULL, &old_action);
-    if (old_action.sa_handler != SIG_IGN) sigaction(SIGSTOP, &sigstop_action, NULL);
-    
-    // for SIGCHLD
-    struct sigaction sigchld_action;
-    sigchld_action.sa_handler = chld_handler;
-    sigemptyset(&sigchld_action.sa_mask);
-    sigchld_action.sa_flags = 0;
-    sigaction(SIGCHLD, NULL, &old_action);
-    if (old_action.sa_handler != SIG_IGN) sigaction(SIGCHLD, &sigchld_action, NULL);
+	// for SIGTSTP
+	sigstop_action.sa_handler = stop_handler;
+	sigemptyset(&sigstop_action.sa_mask);
+	sigstop_action.sa_flags = 0;
+	sigaction(SIGTSTP, &sigstop_action, NULL);
 
 	if (argc == 1) { // runs in interactive mode
 		cout << "Initiliazing IC Shell...\n";
@@ -53,7 +47,7 @@ int main(int argc, char * argv[]) {
 
 		while (1) {
 			getline(cin, commandLine); // get a line from the command line
-			if(commandLine.length() == 0) {
+			if (commandLine.length() == 0) {
 				cout << prompt;
 				continue;
 			}

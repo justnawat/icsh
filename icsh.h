@@ -33,5 +33,10 @@ ifstream prevcmdr;
 ifstream script;
 
 // MILESTONE 3
-extern int errno;
 string prompt = "icsh $ ";
+
+// MILESTONE 4
+struct sigaction default_action;
+struct sigaction ignore;
+struct sigaction sigint_action;
+struct sigaction sigstop_action;
