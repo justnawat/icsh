@@ -2,10 +2,15 @@ void echo(string commandLine) {
     stringstream word(commandLine);
     word >> command;
     while (word >> command) {
+        if (command == "$?") { // supporting echo $? to get last exit status
+            cout << last_status;
+            break;
+        }
         cout << command << " ";
         prevcmdw << command << " ";
-        }   
+    }   
     prevcmdw.close();
+    last_status = 0;
     cout << endl;
 }
  
@@ -50,6 +55,7 @@ void f_ex(string commandLine) {
             c_sarr[i] = const_cast <char *> (sarr[i].c_str());
         c_sarr[my_argc] = NULL;
 
+        // turn on signals
         sigaction(SIGTSTP, &default_action, NULL);
         sigaction(SIGINT, &default_action, NULL);
 
@@ -66,14 +72,15 @@ void f_ex(string commandLine) {
         waitpid(pid, &status, WUNTRACED);
         tcsetpgrp(0, getpid());
         if (WIFEXITED(status))
-            cout << "icsh: exit status: " << WEXITSTATUS(status) << endl;
+            last_status = WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
-            cout << "icsh: signal: " << WIFSIGNALED(status) << endl;
+            last_status = 130;
         else if (WIFSTOPPED(status))
-            cout << "icsh: child received SIGTSTP\n";
+            last_status = 146;
 
-        sigaction(SIGTSTP, &sigstop_action, NULL);
-        sigaction(SIGINT, &sigint_action, NULL);
+        // back to ignoring signals again
+        sigaction(SIGTSTP, &ignore, NULL);
+        sigaction(SIGINT, &ignore, NULL);
     }
 }
 

@@ -38,5 +38,8 @@ string prompt = "icsh $ ";
 // MILESTONE 4
 struct sigaction default_action;
 struct sigaction ignore;
-struct sigaction sigint_action;
-struct sigaction sigstop_action;
+// struct sigaction sigint_action;
+// struct sigaction sigstop_action;
+
+int last_status;
+int i;

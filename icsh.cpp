@@ -9,15 +9,17 @@ string trim(string st) {
 	return st;
 }
 
-void int_handler(int signum) {
-	cout << "icsh: please exit shell properly and use the exit command.\n";
-}
+// void int_handler(int signum) {
+// 	cout << "icsh: please exit shell properly and use the exit command.\n";
+// }
 
-void stop_handler(int signum) {
-	cout << "icsh: shell cannot be suspended\n";
-}
+// void stop_handler(int signum) {
+// 	cout << "icsh: shell cannot be suspended\n";
+// }
 
 int main(int argc, char * argv[]) {
+	last_status = 0;
+
     // default handling just setting up
 	default_action.sa_handler = SIG_DFL;
 	sigemptyset(&default_action.sa_mask);
@@ -29,21 +31,25 @@ int main(int argc, char * argv[]) {
 	ignore.sa_flags = 0;
 	sigaction(SIGTTOU, &ignore, NULL);
 
-    // for SIGINT
-    sigint_action.sa_handler = int_handler;
-    sigemptyset(&sigint_action.sa_mask);
-    sigint_action.sa_flags = 0;
-	sigaction(SIGINT, &sigint_action, NULL);
+	// start by ignoring all signals
+	sigaction(SIGINT, &ignore, NULL);
+	sigaction(SIGTSTP, &ignore, NULL);
+
+    // // for SIGINT
+    // sigint_action.sa_handler = int_handler;
+    // sigemptyset(&sigint_action.sa_mask);
+    // sigint_action.sa_flags = 0;
+	// sigaction(SIGINT, &sigint_action, NULL);
     
-	// for SIGTSTP
-	sigstop_action.sa_handler = stop_handler;
-	sigemptyset(&sigstop_action.sa_mask);
-	sigstop_action.sa_flags = 0;
-	sigaction(SIGTSTP, &sigstop_action, NULL);
+	// // for SIGTSTP
+	// sigstop_action.sa_handler = stop_handler;
+	// sigemptyset(&sigstop_action.sa_mask);
+	// sigstop_action.sa_flags = 0;
+	// sigaction(SIGTSTP, &sigstop_action, NULL);
 
 	if (argc == 1) { // runs in interactive mode
-		cout << "Initiliazing IC Shell...\n";
-		cout << prompt;
+		cout << "Initiliazing IC Shell...";
+		cout << endl << prompt;
 
 		while (1) {
 			getline(cin, commandLine); // get a line from the command line
