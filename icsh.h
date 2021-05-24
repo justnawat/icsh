@@ -36,10 +36,11 @@ ifstream script;
 string prompt = "icsh $ ";
 
 // MILESTONE 4
-struct sigaction default_action = {{0}};
-struct sigaction chld_action = {{0}};
+struct sigaction default_action;
+struct sigaction chld_action;
 // struct sigaction ignore;
 // struct sigaction sigint_action;
 // struct sigaction sigstop_action;
 
 int last_status;
+pid_t shell_id;

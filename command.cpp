@@ -1,3 +1,7 @@
+void chld_handler(int signum) {
+	waitpid(-1, NULL, WNOHANG);
+}
+
 void echo(string commandLine) {
     stringstream word(commandLine);
     word >> command;
@@ -60,13 +64,11 @@ void f_ex(string commandLine) {
         sigaction(SIGTSTP, &default_action, NULL);
         sigaction(SIGINT, &default_action, NULL);
 
-        execvp(c_sarr[0], c_sarr);
+        // disables my SIGCHLD handler
+        chld_action.sa_handler = SIG_IGN;
+        sigaction(SIGCHLD, &chld_action, NULL); // reinstalls child handler
 
-        // just in case and only if exec command doesn't work
-        default_action.sa_handler = SIG_IGN;
-        sigaction(SIGTSTP, &default_action, NULL);
-        sigaction(SIGINT, &default_action, NULL);
-        sigaction(SIGTTOU, &default_action, NULL);
+        execvp(c_sarr[0], c_sarr);
 
         cout << "icsh: command not found\n";
         exit(127); // according to bash, this is the exit code when a command is not found
@@ -76,13 +78,17 @@ void f_ex(string commandLine) {
 
         int status;
         waitpid(pid, &status, WUNTRACED);
-        tcsetpgrp(0, getpid());
+        // cout << "wait successfully\n";
+        tcsetpgrp(0, shell_id);
 
         // back to ignoring signals again
         default_action.sa_handler = SIG_IGN;
         sigaction(SIGTSTP, &default_action, NULL);
         sigaction(SIGINT, &default_action, NULL);
-        sigaction(SIGTTOU, &default_action, NULL);
+        
+        // puts the chld_handler back in place
+        chld_action.sa_handler = chld_handler;
+        sigaction(SIGCHLD, &chld_action, NULL);
 
         if (WIFEXITED(status))
             last_status = WEXITSTATUS(status);

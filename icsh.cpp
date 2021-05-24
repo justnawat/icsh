@@ -9,52 +9,27 @@ string trim(string st) {
 	return st;
 }
 
-// void int_handler(int signum) {
-// 	cout << "icsh: please exit shell properly and use the exit command.\n";
-// }
-
-// void stop_handler(int signum) {
-// 	cout << "icsh: shell cannot be suspended\n";
-// }
-
-void chld_handler(int signum) {
-	waitpid(-1, NULL, WUNTRACED);
-}
-
 int main(int argc, char * argv[]) {
 	last_status = 0;
 
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
-	// sigemptyset(&default_action.sa_mask);
-	// default_action.sa_flags = 0;	
-
-	// // for ignore
-	// ignore.sa_handler = SIG_IGN;
-	// sigemptyset(&ignore.sa_mask);
-	// ignore.sa_flags = SA_NOCLDWAIT;
-	// sigaction(SIGTTOU, &ignore, NULL);
+	sigemptyset(&default_action.sa_mask);
+	default_action.sa_flags = 0;	
 
 	// start by ignoring all signals
 	sigaction(SIGTTOU, &default_action, NULL);
 	sigaction(SIGINT, &default_action, NULL);
 	sigaction(SIGTSTP, &default_action, NULL);
 
-	// for SIGCHLD
+	// for SIGCHLD at the start
 	chld_action.sa_handler = chld_handler;
+	sigemptyset(&chld_action.sa_mask);
+	chld_action.sa_flags = 0;
 	sigaction(SIGCHLD, &chld_action, NULL);
 
-    // // for SIGINT
-    // sigint_action.sa_handler = int_handler;
-    // sigemptyset(&sigint_action.sa_mask);
-    // sigint_action.sa_flags = 0;
-	// sigaction(SIGINT, &sigint_action, NULL);
-    
-	// // for SIGTSTP
-	// sigstop_action.sa_handler = stop_handler;
-	// sigemptyset(&sigstop_action.sa_mask);
-	// sigstop_action.sa_flags = 0;
-	// sigaction(SIGTSTP, &sigstop_action, NULL);
+	shell_id = getpid(); // get the pid of the shell
+	setpgid(0, shell_id); // set the process group of the shell to its own pid
 
 	if (argc == 1) { // runs in interactive mode
 		cout << "Initiliazing IC Shell...";
@@ -68,7 +43,6 @@ int main(int argc, char * argv[]) {
 			}
 
 			if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine); // trim leading spaces
-
 			else { // not empty command
 				run(commandLine, 0);
 			}
