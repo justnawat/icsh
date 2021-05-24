@@ -18,7 +18,7 @@ string trim(string st) {
 // }
 
 void chld_handler(int signum) {
-	waitpid(-1, NULL, WNOHANG);
+	waitpid(-1, NULL, WUNTRACED);
 }
 
 int main(int argc, char * argv[]) {
