@@ -62,7 +62,12 @@ void f_ex(string commandLine) {
 
         execvp(c_sarr[0], c_sarr);
 
-        // only if the exec command doesn't work
+        // just in case and only if exec command doesn't work
+        default_action.sa_handler = SIG_IGN;
+        sigaction(SIGTSTP, &default_action, NULL);
+        sigaction(SIGINT, &default_action, NULL);
+        sigaction(SIGTTOU, &default_action, NULL);
+
         cout << "icsh: command not found\n";
         exit(127); // according to bash, this is the exit code when a command is not found
     } else {
@@ -71,14 +76,13 @@ void f_ex(string commandLine) {
 
         int status;
         waitpid(pid, &status, WUNTRACED);
+        tcsetpgrp(0, getpid());
 
         // back to ignoring signals again
         default_action.sa_handler = SIG_IGN;
         sigaction(SIGTSTP, &default_action, NULL);
         sigaction(SIGINT, &default_action, NULL);
         sigaction(SIGTTOU, &default_action, NULL);
-
-        tcsetpgrp(0, getpid());
 
         if (WIFEXITED(status))
             last_status = WEXITSTATUS(status);
