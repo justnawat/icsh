@@ -12,3 +12,4 @@ I'll go through this Milestone by Milestone.
 
 -- MILESTONE 4 -- 
 - sending signals to the child process from a signal handler: https://stackoverflow.com/questions/13351851/killing-a-child-process-from-a-signal-handler
+- talking with Justin where he shared his conversation with Aj.Sunsern

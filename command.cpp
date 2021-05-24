@@ -35,7 +35,6 @@ void f_ex(string commandLine) {
         tcsetpgrp(0, pid); // make child process the foreground process
 
         // for executing external commands in c++
-        stringstream word(commandLine);
         int my_argc = 0;
     
         // counts the number of arguments 
@@ -45,6 +44,7 @@ void f_ex(string commandLine) {
         }
 
         // makes an array of C++ strings
+        stringstream word(commandLine);
         string sarr[my_argc+1];
         for (int i = 0; i < my_argc; i++)
             word >> sarr[i];
@@ -56,6 +56,7 @@ void f_ex(string commandLine) {
         c_sarr[my_argc] = NULL;
 
         // turn on signals
+        default_action.sa_handler = SIG_DFL;
         sigaction(SIGTSTP, &default_action, NULL);
         sigaction(SIGINT, &default_action, NULL);
 
@@ -70,17 +71,21 @@ void f_ex(string commandLine) {
 
         int status;
         waitpid(pid, &status, WUNTRACED);
+
+        // back to ignoring signals again
+        default_action.sa_handler = SIG_IGN;
+        sigaction(SIGTSTP, &default_action, NULL);
+        sigaction(SIGINT, &default_action, NULL);
+        sigaction(SIGTTOU, &default_action, NULL);
+
         tcsetpgrp(0, getpid());
+
         if (WIFEXITED(status))
             last_status = WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
             last_status = 130;
         else if (WIFSTOPPED(status))
             last_status = 146;
-
-        // back to ignoring signals again
-        sigaction(SIGTSTP, &ignore, NULL);
-        sigaction(SIGINT, &ignore, NULL);
     }
 }
 

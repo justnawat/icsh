@@ -17,23 +17,32 @@ string trim(string st) {
 // 	cout << "icsh: shell cannot be suspended\n";
 // }
 
+void chld_handler(int signum) {
+	waitpid(-1, NULL, WNOHANG);
+}
+
 int main(int argc, char * argv[]) {
 	last_status = 0;
 
     // default handling just setting up
-	default_action.sa_handler = SIG_DFL;
-	sigemptyset(&default_action.sa_mask);
-	default_action.sa_flags = 0;
+	default_action.sa_handler = SIG_IGN;
+	// sigemptyset(&default_action.sa_mask);
+	// default_action.sa_flags = 0;	
 
-	// for ignore
-	ignore.sa_handler = SIG_IGN;
-	sigemptyset(&ignore.sa_mask);
-	ignore.sa_flags = 0;
-	sigaction(SIGTTOU, &ignore, NULL);
+	// // for ignore
+	// ignore.sa_handler = SIG_IGN;
+	// sigemptyset(&ignore.sa_mask);
+	// ignore.sa_flags = SA_NOCLDWAIT;
+	// sigaction(SIGTTOU, &ignore, NULL);
 
 	// start by ignoring all signals
-	sigaction(SIGINT, &ignore, NULL);
-	sigaction(SIGTSTP, &ignore, NULL);
+	sigaction(SIGTTOU, &default_action, NULL);
+	sigaction(SIGINT, &default_action, NULL);
+	sigaction(SIGTSTP, &default_action, NULL);
+
+	// for SIGCHLD
+	chld_action.sa_handler = chld_handler;
+	sigaction(SIGCHLD, &chld_action, NULL);
 
     // // for SIGINT
     // sigint_action.sa_handler = int_handler;
