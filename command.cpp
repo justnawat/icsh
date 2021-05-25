@@ -25,14 +25,14 @@ void my_exit(string commandLine, int mode) {
     if (word >> command) exit_code = stoi(command) & 0xff;
     else exit_code = 0;
     remove(".pcmd.txt");
-    if (mode == 0) cout << "Bye! See you later!\n";
+    if (mode == 0) cout << "\033[1;36mBye! See you later!\033[0m\n";
     exit(exit_code);
 }
 
 void f_ex(string commandLine) {
     pid_t pid = fork();
     if (pid < 0) {
-        cout << "icsh: forking failed\n";
+        cout << "\033[1;31micsh:\033[0m forking failed\n";
     } else if (pid == 0) {
         pid = getpid();
         setpgid(pid, pid); // put child process in its own process group
@@ -70,7 +70,7 @@ void f_ex(string commandLine) {
 
         execvp(c_sarr[0], c_sarr);
 
-        cout << "icsh: command not found\n";
+        cout << "\033[1;31micsh:\033[0m command not found\n";
         exit(127); // according to bash, this is the exit code when a command is not found
     } else {
         setpgid(pid, pid); // make sure the child process gets to control the terminal
@@ -113,7 +113,7 @@ void doubleBang(int mode) {
         if (mode == 0) cout << oldLine << endl;
         dbrun(oldLine, mode);
     } else {
-        if (mode == 0) cout << "icsh: command not found\n";
+        if (mode == 0) cout << "\033[1;31micsh:\033[1;31m command not found\n";
     }
     prevcmdr.close();
 }

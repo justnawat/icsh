@@ -5,12 +5,13 @@ string trim(string st) {
 	while (st.substr(0, 1) == " ") {
 		st = st.substr(1, st.length() - 1);
 	}
-
+	// cout << st;
 	return st;
 }
 
 int main(int argc, char * argv[]) {
 	last_status = 0;
+	prompt = "\033[1;36micsh> \033[0m";
 
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
@@ -32,25 +33,24 @@ int main(int argc, char * argv[]) {
 	setpgid(0, shell_id); // set the process group of the shell to its own pid
 
 	if (argc == 1) { // runs in interactive mode
-		cout << "Initiliazing IC Shell...";
+		cout << "\033[1;36mInitiliazing IC Shell...\033[0m";
 		cout << endl << prompt;
 
 		while (1) {
 			getline(cin, commandLine); // get a line from the command line
+
+			if (commandLine[0] == ' ') commandLine = trim(commandLine); // trim leading spaces
 			if (commandLine.length() == 0) {
 				cout << prompt;
 				continue;
-			}
-
-			if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine); // trim leading spaces
-			else { // not empty command
+			} else { // not empty command
 				run(commandLine, 0);
 			}
 		}
 	} else { // runs in script mode
 		script.open(argv[1]);
 		if (!script.is_open()) {
-			cout << "icsh: script not found\n";
+			cout << "\033[1;31micsh:\033[0m script not found\n";
 			exit(127);
 		} else {
 			while (getline(script, commandLine)) {

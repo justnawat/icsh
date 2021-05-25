@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <cerrno>
+#include <fcntl.h>
 
 // DEALING WITH SIGNALS
 #include <signal.h>
@@ -33,7 +34,7 @@ ifstream prevcmdr;
 ifstream script;
 
 // MILESTONE 3
-string prompt = "icsh $ ";
+string prompt;
 
 // MILESTONE 4
 struct sigaction default_action;
@@ -41,6 +42,8 @@ struct sigaction chld_action;
 // struct sigaction ignore;
 // struct sigaction sigint_action;
 // struct sigaction sigstop_action;
-
 int last_status;
 pid_t shell_id;
+
+// MILESTONE 5
+
