@@ -75,7 +75,7 @@ int main(int argc, char * argv[]) {
 
 					close(fin_fd);
 					fflush(stdin);
-					sleep(1);
+					sleep(1); // gives time to flush everything in stdin
 					dup2(saved_stdin, STDIN_FILENO);
 					close(saved_stdin);
 					break;
