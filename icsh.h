@@ -52,4 +52,4 @@ int redir_flag;
 
 
 // MILESTONE 7
-
+string username;

@@ -11,7 +11,8 @@ string trim(string st) {
 
 int main(int argc, char * argv[]) {
 	last_status = 0;
-	prompt = "\033[1;36micsh> \033[0m";
+	username = getenv("USER");
+	prompt = "\033[1;36m" + username + "@icsh> \033[0m";
 
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
