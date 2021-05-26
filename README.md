@@ -13,3 +13,13 @@ I'll go through this Milestone by Milestone.
 -- MILESTONE 4 -- 
 - sending signals to the child process from a signal handler: https://stackoverflow.com/questions/13351851/killing-a-child-process-from-a-signal-handler
 - talking with Justin where he shared his conversation with Aj.Sunsern
+- talking with Aj.Sunsern
+
+-- MILESTONE 5 --
+- returning to using stdin and stdout after using dup2(): https://stackoverflow.com/questions/11042218/c-restore-stdout-to-terminal
+
+-- MILESTONE 6 -- 
+not quite there yet
+
+-- MILESTONE 7 -- 
+not quite there yet
