@@ -22,4 +22,4 @@ I'll go through this Milestone by Milestone.
 not quite there yet
 
 -- MILESTONE 7 -- 
-not quite there yet
+- changing color of the terminal to look nicer: https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal

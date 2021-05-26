@@ -38,14 +38,104 @@ int main(int argc, char * argv[]) {
 
 		while (1) {
 			getline(cin, commandLine); // get a line from the command line
-
+			
 			if (commandLine[0] == ' ') commandLine = trim(commandLine); // trim leading spaces
-			if (commandLine.length() == 0) {
+			if (commandLine.length() == 0) { // empty commmand
 				cout << prompt;
 				continue;
-			} else { // not empty command
-				run(commandLine, 0);
 			}
+
+			// not empty command
+			int fin_fd, fout_fd, saved_stdin, saved_stdout;
+			string fin_name, fout_name;
+			
+			redir_flag = redirc(commandLine); // sees if there is any redirection
+			// cout << "case is : " << redir_flag << endl;
+			switch(redir_flag) {
+				case 0:
+					// cout << "case 0\n";
+					run(commandLine, 0);
+					break;
+
+				case 0b01: // only stdin redirection
+					// cout << "case 0b01\n";
+					fin_name = find_rein(commandLine); // find file name
+					fin_fd = open(fin_name.c_str(), O_RDONLY); // open in read-only
+					
+					if (fin_fd < 0) { // can't open file
+						cout << "\033[1;31micsh:\033[0m cannot find input file\n";
+						continue;
+					}
+
+					// duplicate, run, and close
+					saved_stdin = dup(STDIN_FILENO); // saves the original stdin
+					dup2(fin_fd, STDIN_FILENO);
+					commandLine = commandLine.substr(0, rein_pos(commandLine)-1);
+					run(commandLine, 0);
+
+					close(fin_fd);
+					fflush(stdin);
+					sleep(1);
+					dup2(saved_stdin, STDIN_FILENO);
+					close(saved_stdin);
+					break;
+
+				case 0b10:
+					// cout << "case 0b10\n";
+					fout_name = find_reout(commandLine); // find output name
+					fout_fd = open(fout_name.c_str(), O_TRUNC | O_WRONLY | O_CREAT, 0644); 
+				
+					if (fout_fd < 0) {
+						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+						continue;
+					}
+
+					saved_stdout = dup(STDOUT_FILENO);
+					dup2(fout_fd, 1);
+					commandLine = commandLine.substr(0, reout_pos(commandLine)-1);
+					run(commandLine, 0);
+
+					close(fout_fd);
+					fflush(stdout);
+					sleep(1);
+					dup2(saved_stdout, STDOUT_FILENO);
+					close(saved_stdout);
+					break;
+
+				case 0b11:
+					// cout << "case 0b11\n";
+					fin_name = find_rein(commandLine);
+					fout_name = find_reout(commandLine);
+					fin_fd = open(fin_name.c_str(), O_RDONLY);
+					fout_fd = open(fout_name.c_str(), O_CREAT | O_WRONLY, 0644);
+
+					if (fin_fd < 0 || fout_fd < 0) {
+						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+						continue;
+					}
+
+					saved_stdin = dup(STDIN_FILENO);
+					saved_stdout = dup(STDOUT_FILENO);
+					dup2(fin_fd, STDIN_FILENO);
+					dup2(fout_fd, STDOUT_FILENO);
+					commandLine = commandLine.substr(0, rein_pos(commandLine)-1);
+					run(commandLine, 0);
+
+					close(fin_fd);
+					close(fout_fd);
+					fflush(stdin);
+					fflush(stdout);
+					sleep(1);
+					dup2(saved_stdin, STDIN_FILENO);
+					dup2(saved_stdout, STDOUT_FILENO);
+					close(saved_stdin);
+					close(saved_stdout);
+					break;
+
+				default:
+					cout << "\033[1;31micsh:\033[0m redirection failed\n";
+			}
+			cout << prompt;
 		}
 	} else { // runs in script mode
 		script.open(argv[1]);

@@ -46,4 +46,10 @@ int last_status;
 pid_t shell_id;
 
 // MILESTONE 5
+int redir_flag;
+
+// MILESTONE 6
+
+
+// MILESTONE 7
 

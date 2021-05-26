@@ -1,3 +1,5 @@
+#include "redirect.cpp"
+
 void chld_handler(int signum) {
 	waitpid(-1, NULL, WNOHANG);
 }
@@ -133,5 +135,4 @@ void run(string commandLine, int mode) {
 	else if (command == "!!") doubleBang(mode);
 	else if (command == "exit") my_exit(commandLine, mode);
     else f_ex(commandLine); // for external commands
-    if (mode == 0) cout << prompt;
 }
