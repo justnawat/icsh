@@ -53,17 +53,18 @@ pid_t shell_id;
 int redir_flag; // checks if there is need to redirect
 
 // MILESTONE 6
-// class job {
-// public:
-//     int jid;
-//     string cmd;
-//     string stat;
-//     string age;
-//     job* next;
-// };
-// job* head;
-// job* current;
-// job* tail;
+bool background;
+class job {
+public:
+    int jid;
+    string cmd;
+    string stat;
+    string age;
+    job* next;
+};
+job* head;
+job* current;
+job* tail;
 
 // MILESTONE 7
 string username; // get username of user

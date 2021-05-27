@@ -10,10 +10,11 @@ string trim(string st) {
 }
 
 int main(int argc, char * argv[]) {
-	// prevcmd = new oldcmd();
 	last_status = 0;
 	username = getenv("USER");
 	prompt = "\033[1;36m" + username + "@icsh> \033[0m";
+
+	
 
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
@@ -46,6 +47,9 @@ int main(int argc, char * argv[]) {
 				cout << prompt;
 				continue;
 			}
+
+			if (commandLine[commandLine.length() - 1] == '&') background = true;
+			else background = false;
 
 			// not empty command
 			int fin_fd, fout_fd, saved_stdin, saved_stdout;

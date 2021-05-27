@@ -1,5 +1,5 @@
 #include "redirect.cpp"
-// #include "jobcont.cpp"
+#include "jobcont.cpp"
 
 void chld_handler(int signum) {
 	waitpid(-1, NULL, WNOHANG);
@@ -109,9 +109,9 @@ void dbrun(string commandLine, int mode) {
 	if (command == "echo") echo(commandLine);
 	else if (command == "exit") my_exit(commandLine, mode);
 
-    // else if (command == "jobs") myjob();
-    // else if (command == "fg") make_foreground(commandLine);
-    // else if (command == "bg") make_background(commandLine);
+    else if (command == "jobs") myjob();
+    else if (command == "fg") make_foreground(commandLine);
+    else if (command == "bg") make_background(commandLine);
 
 	else f_ex(commandLine); // will run external commands
 }	
@@ -127,28 +127,17 @@ void doubleBang(int mode) {
 
 void run(string commandLine, int mode) {
 
-    // int fin_fd, fout_fd, saved_stdin, saved_stdout;
-    // string fin_name, fout_name;
-
 	stringstream word(commandLine);
 	word >> command;
     if (!(command == "!!" || command == "exit")) oldcommand = commandLine;
-
-	// if (command == "!!") prevcmdr.open(".pcmd.txt");
-	// else if (command == "exit"); // doesn't open previous command file becuase it's exiting
-	// else {
-	// 	prevcmdw.open(".pcmd.txt");
-	// 	prevcmdw << commandLine << endl;
-	//     prevcmdw.close();
-    // }
 
 	if (command == "echo") echo(commandLine);
 	else if (command == "!!") doubleBang(mode);
 	else if (command == "exit") my_exit(commandLine, mode);
 
-    // else if (command == "jobs") myjob();
-    // else if (command == "fg") make_foreground(commandLine);
-    // else if (command == "bg") make_background(commandLine);
+    else if (command == "jobs") myjob();
+    else if (command == "fg") make_foreground(commandLine);
+    else if (command == "bg") make_background(commandLine);
 
     else f_ex(commandLine); // for external commands
 }
