@@ -10,6 +10,7 @@ string trim(string st) {
 }
 
 int main(int argc, char * argv[]) {
+	// prevcmd = new oldcmd();
 	last_status = 0;
 	username = getenv("USER");
 	prompt = "\033[1;36m" + username + "@icsh> \033[0m";
@@ -242,11 +243,11 @@ int main(int argc, char * argv[]) {
 			
 			// deleting the previous command file
 			// just in case that there's no exit call in the script
-            prevcmdr.open(".pcmd.txt");
-			if (prevcmdr.is_open()) {
-				prevcmdr.close();
-				remove(".pcmd.txt");
-			}
+            // prevcmdr.open(".pcmd.txt");
+			// if (prevcmdr.is_open()) {
+			// 	prevcmdr.close();
+			// 	remove(".pcmd.txt");
+			// }
 
 			exit(0);
 		}

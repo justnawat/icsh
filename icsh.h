@@ -26,30 +26,44 @@ using namespace std;
 // MILESTONE 1
 string commandLine; // the whole line of the command
 string command; // just the first word of the command
-string oldLine;
-ofstream prevcmdw;
-ifstream prevcmdr;
+string oldLine; // old line
+
+// new way to run old commands
+string oldcommand;
+
+// ofstream prevcmdw; // file of previous command but write only
+// ifstream prevcmdr; // file of prev command but read only
 
 // MILESTONE 2
-ifstream script;
+ifstream script; // read only for script file
 
 // MILESTONE 3
-string prompt;
+string prompt; // changing to a variable prompt for consistency
 
 // MILESTONE 4
-struct sigaction default_action;
-struct sigaction chld_action;
+struct sigaction default_action; // sig handler for default stuff
+struct sigaction chld_action; // sig handler for children
 // struct sigaction ignore;
 // struct sigaction sigint_action;
 // struct sigaction sigstop_action;
-int last_status;
+int last_status; // for echo $?
 pid_t shell_id;
 
 // MILESTONE 5
-int redir_flag;
+int redir_flag; // checks if there is need to redirect
 
 // MILESTONE 6
-
+// class job {
+// public:
+//     int jid;
+//     string cmd;
+//     string stat;
+//     string age;
+//     job* next;
+// };
+// job* head;
+// job* current;
+// job* tail;
 
 // MILESTONE 7
-string username;
+string username; // get username of user

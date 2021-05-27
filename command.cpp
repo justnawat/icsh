@@ -1,4 +1,5 @@
 #include "redirect.cpp"
+// #include "jobcont.cpp"
 
 void chld_handler(int signum) {
 	waitpid(-1, NULL, WNOHANG);
@@ -13,9 +14,9 @@ void echo(string commandLine) {
             break;
         }
         cout << command << " ";
-        prevcmdw << command << " ";
+        // prevcmdw << command << " ";
     }   
-    prevcmdw.close();
+    // prevcmdw.close();
     last_status = 0;
     cout << endl;
 }
@@ -28,6 +29,7 @@ void my_exit(string commandLine, int mode) {
     else exit_code = 0;
     remove(".pcmd.txt");
     if (mode == 0) cout << "\033[1;36mBye! See you later!\033[0m\n";
+    // free(prevcmd);
     exit(exit_code);
 }
 
@@ -106,33 +108,47 @@ void dbrun(string commandLine, int mode) {
 	word >> command;
 	if (command == "echo") echo(commandLine);
 	else if (command == "exit") my_exit(commandLine, mode);
+
+    // else if (command == "jobs") myjob();
+    // else if (command == "fg") make_foreground(commandLine);
+    // else if (command == "bg") make_background(commandLine);
+
 	else f_ex(commandLine); // will run external commands
 }	
 
 void doubleBang(int mode) {
-    if (prevcmdr.is_open()) {
-        getline(prevcmdr, oldLine);
-        if (mode == 0) cout << oldLine << endl;
-        dbrun(oldLine, mode);
+    if (oldcommand.length() != 0) {
+        if (mode == 0) cout << oldcommand << endl;
+        dbrun(oldcommand, mode);
     } else {
         if (mode == 0) cout << "\033[1;31micsh:\033[1;31m command not found\n";
     }
-    prevcmdr.close();
 }
 
 void run(string commandLine, int mode) {
+
+    // int fin_fd, fout_fd, saved_stdin, saved_stdout;
+    // string fin_name, fout_name;
+
 	stringstream word(commandLine);
 	word >> command;
-	if (command == "!!") prevcmdr.open(".pcmd.txt");
-	else if (command == "exit"); // doesn't open previous command file becuase it's exiting
-	else {
-		prevcmdw.open(".pcmd.txt");
-		prevcmdw << commandLine << endl;
-	    prevcmdw.close();
-    }
+    if (!(command == "!!" || command == "exit")) oldcommand = commandLine;
+
+	// if (command == "!!") prevcmdr.open(".pcmd.txt");
+	// else if (command == "exit"); // doesn't open previous command file becuase it's exiting
+	// else {
+	// 	prevcmdw.open(".pcmd.txt");
+	// 	prevcmdw << commandLine << endl;
+	//     prevcmdw.close();
+    // }
 
 	if (command == "echo") echo(commandLine);
 	else if (command == "!!") doubleBang(mode);
 	else if (command == "exit") my_exit(commandLine, mode);
+
+    // else if (command == "jobs") myjob();
+    // else if (command == "fg") make_foreground(commandLine);
+    // else if (command == "bg") make_background(commandLine);
+
     else f_ex(commandLine); // for external commands
 }
