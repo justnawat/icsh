@@ -16,6 +16,7 @@ I'll go through this Milestone by Milestone.
 - talking with Aj.Sunsern
 
 -- MILESTONE 5 --
+- The program is designed to have a delay when redirecting.
 - returning to using stdin and stdout after using dup2(): https://stackoverflow.com/questions/11042218/c-restore-stdout-to-terminal
 
 -- MILESTONE 6 -- 
