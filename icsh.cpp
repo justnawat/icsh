@@ -14,8 +14,6 @@ int main(int argc, char * argv[]) {
 	username = getenv("USER");
 	prompt = "\033[1;36m" + username + "@icsh> \033[0m";
 
-	
-
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
 	sigemptyset(&default_action.sa_mask);
@@ -23,6 +21,7 @@ int main(int argc, char * argv[]) {
 
 	// start by ignoring all signals
 	sigaction(SIGTTOU, &default_action, NULL);
+	sigaction(SIGTTIN, &default_action, NULL);
 	sigaction(SIGINT, &default_action, NULL);
 	sigaction(SIGTSTP, &default_action, NULL);
 
@@ -48,8 +47,13 @@ int main(int argc, char * argv[]) {
 				continue;
 			}
 
-			if (commandLine[commandLine.length() - 1] == '&') background = true;
-			else background = false;
+			// cout << commandLine.substr(commandLine.length() - 2, 2) << endl;
+			if (commandLine.substr(commandLine.length() - 2, 2) == " &") {
+				// cout << "is background" << endl;
+				background = true;
+				commandLine = commandLine.substr(0, commandLine.length() - 2);
+				// cout << commandLine << endl;
+			} else background = false;
 
 			// not empty command
 			int fin_fd, fout_fd, saved_stdin, saved_stdout;

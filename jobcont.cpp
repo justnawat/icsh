@@ -26,9 +26,21 @@ void myjob() {
 }
 
 void make_foreground(string commandLine) {
-    // do something
+    stringstream cmdstr(commandLine);
+    word >> command;
+    word >> command;
+
+    int readjid;
+    readjid = stoi(command.substr(1, command.length() - 1));
+
+
 }
 
 void make_background(string commandLine) {
-    // do something
+    stringstream cmdstr(commandLine);
+    word >> command;
+    word >> command;
+
+    int readjid;
+    readjid = stoi(command.substr(1, command.length() - 1));
 }

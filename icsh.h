@@ -60,6 +60,7 @@ public:
     string cmd;
     string stat;
     string age;
+    int jpid;
     job* next;
 };
 job* head;

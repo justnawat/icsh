@@ -81,7 +81,11 @@ void f_ex(string commandLine) {
         tcsetpgrp(0, pid);
 
         int status;
-        waitpid(pid, &status, WUNTRACED);
+        if (background) {
+            waitpid(pid, &status, WNOHANG);
+        } else {
+            waitpid(pid, &status, WUNTRACED);
+        }
         // cout << "wait successfully\n";
         tcsetpgrp(0, shell_id);
 
