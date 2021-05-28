@@ -2,8 +2,16 @@
 #include "jobcont.cpp"
 
 void chld_handler(int signum) {
-	waitpid(-1, NULL, WNOHANG);
+    int status;
+	waitpid(-1, &status, WNOHANG);
     cout << "done\n";
+
+    if (WIFEXITED(status))
+        last_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        last_status = 130;
+    else if (WIFSTOPPED(status))
+        last_status = 146;
 }
 
 void echo(string commandLine) {
@@ -81,6 +89,7 @@ void f_ex(string commandLine) {
         } else {
             pid = getpid();
             setpgid(pid, pid);
+            tcsetpgrp(0, pid);
             // doesn't get terminal control
 
             // for executing external commands in c++
@@ -106,6 +115,8 @@ void f_ex(string commandLine) {
 
             // doesn't turn on signals cuz parent is running
 
+            pushjob(commandLine, getpid(), background);
+            tcsetpgrp(0, getppid());
             execvp(c_sarr[0], c_sarr);
             
             cout << "\033[1;31micsh:\033[0m command not found\n";

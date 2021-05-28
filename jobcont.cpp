@@ -7,6 +7,43 @@ bool checkbg(string commandLine) {
     }
 }
 
+// adds a job
+void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
+    job* temp = new job();
+    temp->cmd = in_cmd;
+    temp->stat = "running";
+    temp->age = "+";
+    temp->jpid = in_jpid;
+
+    if (head == NULL) {
+        temp->next = NULL; // no next node
+        temp->jid = 1;
+
+        // prints out the jid and pid
+        if (in_bg) {
+            cout << "[" << temp->jid << "]\t";
+            cout << temp->jpid << endl;
+        }
+
+        head = temp;
+    } else {
+        int current_big;
+        for (current = head; current != NULL; current = current->next) {
+            current_big = current->jid;
+            if (current->next == NULL) { // at the last node
+                temp->next = NULL; // points the next pointer to nothing
+                temp->jid = current_big + 1; // the job id is the higher than the current
+                current->next = temp; // points the og last to the new last node
+
+                if (in_bg) {
+                    cout << "[" << temp->jid << "]\t";
+                    cout << temp->jpid << endl;
+                }
+            }
+        }
+    }
+}
+
 // just prints out the current jobs
 void myjob() {
     if (head == NULL) { // no current job
