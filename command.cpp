@@ -3,6 +3,7 @@
 
 void chld_handler(int signum) {
 	waitpid(-1, NULL, WNOHANG);
+    cout << "done\n";
 }
 
 void echo(string commandLine) {
@@ -24,10 +25,10 @@ void echo(string commandLine) {
 void my_exit(string commandLine, int mode) {
     int exit_code;
     stringstream word(commandLine);
+    d_job();
     word >> command;
     if (word >> command) exit_code = stoi(command) & 0xff;
     else exit_code = 0;
-    remove(".pcmd.txt");
     if (mode == 0) cout << "\033[1;36mBye! See you later!\033[0m\n";
     // free(prevcmd);
     exit(exit_code);
@@ -38,72 +39,105 @@ void f_ex(string commandLine) {
     if (pid < 0) {
         cout << "\033[1;31micsh:\033[0m forking failed\n";
     } else if (pid == 0) {
-        pid = getpid();
-        setpgid(pid, pid); // put child process in its own process group
-        tcsetpgrp(0, pid); // make child process the foreground process
+        if (!background) {
+            pid = getpid();
+            setpgid(pid, pid); // put child process in its own process group
+            tcsetpgrp(0, pid); // make child process the foreground process
 
-        // for executing external commands in c++
-        int my_argc = 0;
+            // for executing external commands in c++
+            int my_argc = 0;
     
-        // counts the number of arguments 
-        for (unsigned int i = 0; i <= commandLine.length(); i++) {
-            if (commandLine[i] == ' ' || commandLine[i] == '\0')
-                my_argc++;
-        }
+            // counts the number of arguments 
+            for (unsigned int i = 0; i <= commandLine.length(); i++) {
+                if (commandLine[i] == ' ' || commandLine[i] == '\0')
+                    my_argc++;
+            }
 
-        // makes an array of C++ strings
-        stringstream word(commandLine);
-        string sarr[my_argc+1];
-        for (int i = 0; i < my_argc; i++)
-            word >> sarr[i];
+            // makes an array of C++ strings
+            stringstream word(commandLine);
+            string sarr[my_argc+1];
+            for (int i = 0; i < my_argc; i++)
+                word >> sarr[i];
 
-        // makes an array of C strings
-        char * c_sarr[my_argc+1];
-        for (int i = 0; i < my_argc; i++)
-            c_sarr[i] = const_cast <char *> (sarr[i].c_str());
-        c_sarr[my_argc] = NULL;
+            // makes an array of C strings
+            char * c_sarr[my_argc+1];
+            for (int i = 0; i < my_argc; i++)
+                c_sarr[i] = const_cast <char *> (sarr[i].c_str());
+            c_sarr[my_argc] = NULL;
 
-        // turn on signals
-        default_action.sa_handler = SIG_DFL;
-        sigaction(SIGTSTP, &default_action, NULL);
-        sigaction(SIGINT, &default_action, NULL);
+            // turn on signals
+            default_action.sa_handler = SIG_DFL;
+            sigaction(SIGTSTP, &default_action, NULL);
+            sigaction(SIGINT, &default_action, NULL);
 
-        // disables my SIGCHLD handler
-        chld_action.sa_handler = SIG_IGN;
-        sigaction(SIGCHLD, &chld_action, NULL); // reinstalls child handler
+            // disables my SIGCHLD handler
+            chld_action.sa_handler = SIG_IGN;
+            sigaction(SIGCHLD, &chld_action, NULL); // reinstalls child handler
 
-        execvp(c_sarr[0], c_sarr);
+            execvp(c_sarr[0], c_sarr);
 
-        cout << "\033[1;31micsh:\033[0m command not found\n";
-        exit(127); // according to bash, this is the exit code when a command is not found
-    } else {
-        setpgid(pid, pid); // make sure the child process gets to control the terminal
-        tcsetpgrp(0, pid);
-
-        int status;
-        if (background) {
-            waitpid(pid, &status, WNOHANG);
+            cout << "\033[1;31micsh:\033[0m command not found\n";
+            exit(127); // according to bash, this is the exit code when a command is not found
         } else {
-            waitpid(pid, &status, WUNTRACED);
+            pid = getpid();
+            setpgid(pid, pid);
+            // doesn't get terminal control
+
+            // for executing external commands in c++
+            int my_argc = 0;
+    
+            // counts the number of arguments 
+            for (unsigned int i = 0; i <= commandLine.length(); i++) {
+                if (commandLine[i] == ' ' || commandLine[i] == '\0')
+                    my_argc++;
+            }
+
+            // makes an array of C++ strings
+            stringstream word(commandLine);
+            string sarr[my_argc+1];
+            for (int i = 0; i < my_argc; i++)
+                word >> sarr[i];
+
+            // makes an array of C strings
+            char * c_sarr[my_argc+1];
+            for (int i = 0; i < my_argc; i++)
+                c_sarr[i] = const_cast <char *> (sarr[i].c_str());
+            c_sarr[my_argc] = NULL;
+
+            // doesn't turn on signals cuz parent is running
+
+            execvp(c_sarr[0], c_sarr);
+            
+            cout << "\033[1;31micsh:\033[0m command not found\n";
+            exit(127); // according to bash, this is the exit code when a command is not found
         }
-        // cout << "wait successfully\n";
-        tcsetpgrp(0, shell_id);
+    } else {
+        if (!background) { // only give terminal control if not running in background
+            setpgid(pid, pid);
+            tcsetpgrp(0, pid);
 
-        // back to ignoring signals again
-        default_action.sa_handler = SIG_IGN;
-        sigaction(SIGTSTP, &default_action, NULL);
-        sigaction(SIGINT, &default_action, NULL);
-        
-        // puts the chld_handler back in place
-        chld_action.sa_handler = chld_handler;
-        sigaction(SIGCHLD, &chld_action, NULL);
+            int status;
+            waitpid(pid, &status, WUNTRACED);
 
-        if (WIFEXITED(status))
-            last_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            last_status = 130;
-        else if (WIFSTOPPED(status))
-            last_status = 146;
+            tcsetpgrp(0, shell_id); // gets back terminal control
+            default_action.sa_handler = SIG_IGN;
+            sigaction(SIGTSTP, &default_action, NULL);
+            sigaction(SIGINT, &default_action, NULL);
+
+            chld_action.sa_handler = chld_handler;
+            sigaction(SIGCHLD, &chld_action, NULL);
+
+            if (WIFEXITED(status))
+                last_status = WEXITSTATUS(status);
+            else if (WIFSIGNALED(status))
+                last_status = 130;
+            else if (WIFSTOPPED(status))
+                last_status = 146;
+            return ;
+        } else { // runs in the background
+            tcsetpgrp(0, shell_id); // gives the parent the terminal control
+            return ;
+        }
     }
 }
 

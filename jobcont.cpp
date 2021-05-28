@@ -26,20 +26,41 @@ void myjob() {
 }
 
 void make_foreground(string commandLine) {
-    stringstream cmdstr(commandLine);
-    word >> command;
-    word >> command;
+    if (head == NULL) {
+        cout << "\033[1;31micsh:\033[0m there is no job\n";
+        return ;
+    }
 
+    stringstream cmdstr(commandLine);
+    cmdstr >> command;
+    cmdstr >> command;
+
+    // gets the jid
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));
 
+    for (current = head; current != NULL; current = current->next) {
+        if (current->jid == readjid) {
+            cout << "[" << current->jid << "]\t"; // job id
+            cout << current->age << "\t"; // blank, -, or +
+            current->stat = "running";
+            cout << current->stat << "\t"; // status
+            cout << current->cmd; // the command itself
 
+            int status;
+            tcsetpgrp(0, current->jpid); // gives terminal control
+            waitpid(current->jpid, &status, WUNTRACED); // waits until it terminates
+            return ;
+        }
+    }
+    cout << "\033[1;31micsh:\033[0m job id cannot be found\n";
+    return ;
 }
 
 void make_background(string commandLine) {
     stringstream cmdstr(commandLine);
-    word >> command;
-    word >> command;
+    cmdstr >> command;
+    cmdstr >> command;
 
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));

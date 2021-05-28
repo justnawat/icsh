@@ -34,6 +34,7 @@ int main(int argc, char * argv[]) {
 	shell_id = getpid(); // get the pid of the shell
 	setpgid(0, shell_id); // set the process group of the shell to its own pid
 
+	// this is where the shell actually starts
 	if (argc == 1) { // runs in interactive mode
 		cout << "\033[1;36mInitiliazing IC Shell...\033[0m";
 		cout << endl << prompt;
@@ -157,6 +158,14 @@ int main(int argc, char * argv[]) {
 				if (commandLine.substr(0, 1) == " ") commandLine = trim(commandLine);
 				if (commandLine.length() == 0) continue;
 				if (commandLine.substr(0, 1) == "#") continue; // skips comments
+
+				// checks if need to run in bg
+				if (commandLine.substr(commandLine.length() - 2, 2) == " &") {
+					// cout << "is background" << endl;
+					background = true;
+					commandLine = commandLine.substr(0, commandLine.length() - 2);
+					// cout << commandLine << endl;
+				} else background = false;
 
 				int fin_fd, fout_fd, saved_stdin, saved_stdout;
 				string fin_name, fout_name;
