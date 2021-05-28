@@ -47,7 +47,7 @@ void f_ex(string commandLine) {
     pid_t pid = fork();
     if (pid < 0) {
         cout << "\033[1;31micsh:\033[0m forking failed\n";
-    } else if (pid == 0) {
+    } else if (pid == 0) { // child process
         pushjob(commandLine, getpid(), background);
         if (!background) {
             pid = getpid();
@@ -116,14 +116,14 @@ void f_ex(string commandLine) {
 
             // doesn't turn on signals cuz parent is running
 
-            // sleep(1);
             tcsetpgrp(0, getppid());
+            sleep(1);
             execvp(c_sarr[0], c_sarr);
             
             cout << "\033[1;31micsh:\033[0m command not found\n";
             exit(127); // according to bash, this is the exit code when a command is not found
         }
-    } else {
+    } else { // parent process
         if (!background) { // only give terminal control if not running in background
             setpgid(pid, pid);
             tcsetpgrp(0, pid);

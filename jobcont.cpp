@@ -1,21 +1,19 @@
-// checks if the command has to be run in the background or not
-bool checkbg(string commandLine) {
-    if (commandLine.substr(commandLine.length() - 2, 2) == " &") {
-        return true;
-    } else {
-        return false;
-    }
-}
+job* head;
+job* current;
 
 // adds a job
 void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
+    // cout << "pushjob has been called\n";
+    
+    // creating the starting node for the linked list of jobs
     job* temp = new job();
     temp->cmd = in_cmd;
     temp->stat = "running";
     // temp->age = "+";
     temp->jpid = in_jpid;
 
-    if (head == NULL) {
+    if (head == NULL) { 
+        cout << "head empty\n";
         temp->next = NULL; // no next node
         temp->jid = 1;
 
@@ -26,8 +24,8 @@ void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
         }
 
         head = temp;
-        return ;
     } else {
+        cout << "head emptyn't\n";
         int current_big;
         for (current = head; current != NULL; current = current->next) {
             current_big = current->jid;
@@ -42,7 +40,6 @@ void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
                 }
             }
         }
-        return;
     }
 }
 

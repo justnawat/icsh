@@ -149,7 +149,7 @@ int main(int argc, char * argv[]) {
 					cout << "\033[1;31micsh:\033[0m redirection failed\n";
 			}
 			cout << prompt;
-			sleep(1);
+			if (background) sleep(1);
 		}
 	} else { // runs in script mode
 		script.open(argv[1]);
@@ -260,7 +260,7 @@ int main(int argc, char * argv[]) {
 						cout << "\033[1;31micsh:\033[0m redirection failed\n";
 					
 				}
-				sleep(1);
+				if (background) sleep(1);
 			}
 			
 			// deleting the previous command file

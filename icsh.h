@@ -63,8 +63,6 @@ public:
     int jpid;
     job* next;
 };
-job* head;
-job* current;
 
 // MILESTONE 7
 string username; // get username of user
