@@ -116,7 +116,7 @@ void f_ex(string commandLine) {
 
             // doesn't turn on signals cuz parent is running
 
-            sleep(1);
+            // sleep(1);
             tcsetpgrp(0, getppid());
             execvp(c_sarr[0], c_sarr);
             
