@@ -6,12 +6,13 @@ void chld_handler(int signum) {
 	waitpid(-1, &status, WNOHANG);
     cout << "done\n";
 
-    if (WIFEXITED(status))
+    if (WIFEXITED(status)) {
         last_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
+    } else if (WIFSIGNALED(status)) {
         last_status = 130;
-    else if (WIFSTOPPED(status))
+    } else if (WIFSTOPPED(status)) {
         last_status = 146;
+    }
 }
 
 void echo(string commandLine) {
@@ -47,6 +48,7 @@ void f_ex(string commandLine) {
     if (pid < 0) {
         cout << "\033[1;31micsh:\033[0m forking failed\n";
     } else if (pid == 0) {
+        pushjob(commandLine, getpid(), background);
         if (!background) {
             pid = getpid();
             setpgid(pid, pid); // put child process in its own process group
@@ -90,7 +92,6 @@ void f_ex(string commandLine) {
             pid = getpid();
             setpgid(pid, pid);
             tcsetpgrp(0, pid);
-            // doesn't get terminal control
 
             // for executing external commands in c++
             int my_argc = 0;
@@ -115,7 +116,7 @@ void f_ex(string commandLine) {
 
             // doesn't turn on signals cuz parent is running
 
-            pushjob(commandLine, getpid(), background);
+            sleep(1);
             tcsetpgrp(0, getppid());
             execvp(c_sarr[0], c_sarr);
             

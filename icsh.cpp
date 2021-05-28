@@ -21,7 +21,9 @@ int main(int argc, char * argv[]) {
 
 	// start by ignoring all signals
 	sigaction(SIGTTOU, &default_action, NULL);
+	signal(SIGTTOU, SIG_IGN);
 	sigaction(SIGTTIN, &default_action, NULL);
+	signal(SIGTTIN, SIG_IGN);
 	sigaction(SIGINT, &default_action, NULL);
 	sigaction(SIGTSTP, &default_action, NULL);
 
@@ -147,6 +149,7 @@ int main(int argc, char * argv[]) {
 					cout << "\033[1;31micsh:\033[0m redirection failed\n";
 			}
 			cout << prompt;
+			sleep(1);
 		}
 	} else { // runs in script mode
 		script.open(argv[1]);
@@ -255,7 +258,9 @@ int main(int argc, char * argv[]) {
 
 					default:
 						cout << "\033[1;31micsh:\033[0m redirection failed\n";
+					
 				}
+				sleep(1);
 			}
 			
 			// deleting the previous command file

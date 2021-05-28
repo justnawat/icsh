@@ -59,7 +59,7 @@ public:
     int jid;
     string cmd;
     string stat;
-    string age;
+    // string age;
     int jpid;
     job* next;
 };

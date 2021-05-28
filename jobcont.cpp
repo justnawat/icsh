@@ -12,7 +12,7 @@ void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
     job* temp = new job();
     temp->cmd = in_cmd;
     temp->stat = "running";
-    temp->age = "+";
+    // temp->age = "+";
     temp->jpid = in_jpid;
 
     if (head == NULL) {
@@ -26,6 +26,7 @@ void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
         }
 
         head = temp;
+        return ;
     } else {
         int current_big;
         for (current = head; current != NULL; current = current->next) {
@@ -41,6 +42,7 @@ void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
                 }
             }
         }
+        return;
     }
 }
 
@@ -54,7 +56,7 @@ void myjob() {
 
     while (current != NULL) { // print each job
         cout << "[" << current->jid << "]\t"; // job id
-        cout << current->age << "\t"; // blank, -, or +
+        // cout << current->age << "\t"; // blank, -, or +
         cout << current->stat << "\t"; // status
         cout << current->cmd; // the command itself
         current = current->next; // goes to the next node
@@ -79,7 +81,7 @@ void make_foreground(string commandLine) {
     for (current = head; current != NULL; current = current->next) {
         if (current->jid == readjid) {
             cout << "[" << current->jid << "]\t"; // job id
-            cout << current->age << "\t"; // blank, -, or +
+            // cout << current->age << "\t"; // blank, -, or +
             current->stat = "running";
             cout << current->stat << "\t"; // status
             cout << current->cmd; // the command itself
@@ -101,6 +103,13 @@ void make_background(string commandLine) {
 
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));
+
+    for (current = head; current != NULL; current = current->next) {
+        if (current->jid == readjid) {
+            cout << "[" << current->jid << "]\t";
+            current->stat = "running";
+        }
+    }
 }
 
 void d_job() {
