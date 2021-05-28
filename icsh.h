@@ -65,7 +65,6 @@ public:
 };
 job* head;
 job* current;
-job* tail;
 
 // MILESTONE 7
 string username; // get username of user

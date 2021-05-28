@@ -1,6 +1,6 @@
 // checks if the command has to be run in the background or not
 bool checkbg(string commandLine) {
-    if (commandLine[commandLine.length() - 1] == '&') {
+    if (commandLine.substr(commandLine.length() - 2, 2) == " &") {
         return true;
     } else {
         return false;
@@ -43,4 +43,20 @@ void make_background(string commandLine) {
 
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));
+}
+
+void d_job() {
+    if (head == NULL) {
+        return; // does nothing
+    }
+
+    current = head;
+    job* next;
+
+    while (current != NULL) {
+        next = current->next; // temp pointer to the next node
+        free(current); // frees current
+        current = next; // goes to the next node
+    }
+    return ;
 }
