@@ -46,7 +46,7 @@ void myjob() {
         cout << "[" << current->jid << "]\t"; // job id
         // cout << current->age << "\t"; // blank, -, or +
         cout << current->stat << "\t"; // status
-        cout << current->cmd; // the command itself
+        cout << current->cmd << endl; // the command itself
         current = current->next; // goes to the next node
     }
     return;
