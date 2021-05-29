@@ -3,7 +3,10 @@
 
 void chld_handler(int signum) {
     int status;
-	waitpid(-1, &status, WNOHANG);
+    int pid = waitpid(-1, &status, WNOHANG);
+	while(pid > 0) {
+        pid = waitpid(-1, &status, WNOHANG);
+    }
     cout << "done\n";
 
     if (WIFEXITED(status)) {
@@ -129,7 +132,9 @@ void f_ex(string commandLine) {
             tcsetpgrp(0, pid);
 
             int status;
-            waitpid(pid, &status, WUNTRACED);
+            int waitreturn;
+            waitreturn = waitpid(pid, &status, WUNTRACED);
+            cout << "waitreturn: " << waitreturn << endl;
 
             tcsetpgrp(0, shell_id); // gets back terminal control
             default_action.sa_handler = SIG_IGN;
