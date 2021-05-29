@@ -51,7 +51,6 @@ void f_ex(string commandLine) {
     if (pid < 0) {
         cout << "\033[1;31micsh:\033[0m forking failed\n";
     } else if (pid == 0) { // child process
-        pushjob(commandLine, getpid(), background);
         if (!background) {
             pid = getpid();
             setpgid(pid, pid); // put child process in its own process group
@@ -126,15 +125,17 @@ void f_ex(string commandLine) {
             cout << "\033[1;31micsh:\033[0m command not found\n";
             exit(127); // according to bash, this is the exit code when a command is not found
         }
+
     } else { // parent process
+        pushjob(commandLine, getpid(), background);
         if (!background) { // only give terminal control if not running in background
             setpgid(pid, pid);
             tcsetpgrp(0, pid);
 
             int status;
-            int waitreturn;
-            waitreturn = waitpid(pid, &status, WUNTRACED);
-            cout << "waitreturn: " << waitreturn << endl;
+            // int waitreturn;
+            waitpid(pid, &status, WUNTRACED);
+            // cout << "waitreturn: " << waitreturn << endl;
 
             tcsetpgrp(0, shell_id); // gets back terminal control
             default_action.sa_handler = SIG_IGN;

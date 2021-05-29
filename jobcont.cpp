@@ -1,50 +1,41 @@
-job* head;
-job* current;
+#include "jobcont.h"
 
 // adds a job
 void pushjob(string in_cmd, pid_t in_jpid, bool in_bg) {
     // cout << "pushjob has been called\n";
     
     // creating the starting node for the linked list of jobs
-    job* temp = new job();
+    jobNode* temp = new jobNode();
     temp->cmd = in_cmd;
     temp->stat = "running";
     // temp->age = "+";
     temp->jpid = in_jpid;
+    temp->next = NULL;
 
     if (head == NULL) { 
         cout << "head empty\n";
-        temp->next = NULL; // no next node
         temp->jid = 1;
-
-        // prints out the jid and pid
-        if (in_bg) {
-            cout << "[" << temp->jid << "]\t";
-            cout << temp->jpid << endl;
-        }
-
         head = temp;
+        tail = temp;
     } else {
         cout << "head emptyn't\n";
-        int current_big;
-        for (current = head; current != NULL; current = current->next) {
-            current_big = current->jid;
-            if (current->next == NULL) { // at the last node
-                temp->next = NULL; // points the next pointer to nothing
-                temp->jid = current_big + 1; // the job id is the higher than the current
-                current->next = temp; // points the og last to the new last node
+        // int current_big;
+        // jobNode* current;
+        temp->jid = tail->jid+1;
+        tail->next = temp;
+        tail = temp;
+    }
 
-                if (in_bg) {
-                    cout << "[" << temp->jid << "]\t";
-                    cout << temp->jpid << endl;
-                }
-            }
-        }
+    // prints out the jid and pid
+    if (in_bg) {
+        cout << "[" << temp->jid << "]\t";
+        cout << temp->jpid << endl;
     }
 }
 
 // just prints out the current jobs
 void myjob() {
+    jobNode* current;
     if (head == NULL) { // no current job
         return;
     } else { // has jobs
@@ -75,6 +66,7 @@ void make_foreground(string commandLine) {
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));
 
+    jobNode* current;
     for (current = head; current != NULL; current = current->next) {
         if (current->jid == readjid) {
             cout << "[" << current->jid << "]\t"; // job id
@@ -101,6 +93,7 @@ void make_background(string commandLine) {
     int readjid;
     readjid = stoi(command.substr(1, command.length() - 1));
 
+    jobNode* current;
     for (current = head; current != NULL; current = current->next) {
         if (current->jid == readjid) {
             cout << "[" << current->jid << "]\t";
@@ -114,8 +107,9 @@ void d_job() {
         return; // does nothing
     }
 
+    jobNode* current;
+    jobNode* next;
     current = head;
-    job* next;
 
     while (current != NULL) {
         next = current->next; // temp pointer to the next node

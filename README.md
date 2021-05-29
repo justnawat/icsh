@@ -20,7 +20,10 @@ I'll go through this Milestone by Milestone.
 - returning to using stdin and stdout after using dup2(): https://stackoverflow.com/questions/11042218/c-restore-stdout-to-terminal
 
 -- MILESTONE 6 -- 
-not quite there yet
+- External commands CAN and WILL run in the background. However, it causes the prompt to be printed repeatedly after terminating/finishing.
+- jobs now works.
+- fg doesn't work.
+- bg also doesn't work.
 
 -- MILESTONE 7 -- 
 - changing color of the terminal to look nicer: https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal

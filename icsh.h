@@ -54,15 +54,6 @@ int redir_flag; // checks if there is need to redirect
 
 // MILESTONE 6
 bool background;
-class job {
-public:
-    int jid;
-    string cmd;
-    string stat;
-    // string age;
-    int jpid;
-    job* next;
-};
 
 // MILESTONE 7
 string username; // get username of user
