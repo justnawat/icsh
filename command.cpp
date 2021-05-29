@@ -2,20 +2,20 @@
 #include "jobcont.cpp"
 
 void chld_handler(int signum) {
+    chld_action.sa_handler = SIG_IGN;
+    sigaction(SIGCHLD, &chld_action, NULL);
     int status;
-    int pid = waitpid(-1, &status, WNOHANG);
-	while(pid > 0) {
-        pid = waitpid(-1, &status, WNOHANG);
-    }
-    cout << "done\n";
+    int pid;
+    while ((pid = waitpid(-1, &status, WNOHANG) > 0));
+    // cout << "done\n";
 
-    if (WIFEXITED(status)) {
-        last_status = WEXITSTATUS(status);
-    } else if (WIFSIGNALED(status)) {
-        last_status = 130;
-    } else if (WIFSTOPPED(status)) {
-        last_status = 146;
-    }
+    // if (WIFEXITED(status)) {
+    //     last_status = WEXITSTATUS(status);
+    // } else if (WIFSIGNALED(status)) {
+    //     last_status = 130;
+    // } else if (WIFSTOPPED(status)) {
+    //     last_status = 146;
+    // }
 }
 
 void echo(string commandLine) {

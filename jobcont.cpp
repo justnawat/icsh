@@ -69,15 +69,29 @@ void make_foreground(string commandLine) {
     jobNode* current;
     for (current = head; current != NULL; current = current->next) {
         if (current->jid == readjid) {
-            cout << "[" << current->jid << "]\t"; // job id
-            // cout << current->age << "\t"; // blank, -, or +
-            current->stat = "running";
-            cout << current->stat << "\t"; // status
-            cout << current->cmd; // the command itself
-
             int status;
             tcsetpgrp(0, current->jpid); // gives terminal control
-            waitpid(current->jpid, &status, WUNTRACED); // waits until it terminates
+            pause();
+            // waitpid(current->jpid, &status, WUNTRACED); // waits until it terminates
+            tcsetpgrp(0, getpid());
+            // cout << current->age << "\t"; // blank, -, or +
+
+            if (WIFEXITED(status)) {
+                last_status = WEXITSTATUS(status);
+                current->stat = "done";
+            } else if (WIFSIGNALED(status)) {
+                last_status = 130;
+                cout << "termsig is " << WTERMSIG(status) << endl;
+                current->stat = "signaled";
+            } else if (WIFSTOPPED(status)) {
+                last_status = 146;
+                current->stat = "stopped";
+            }
+
+            cout << "[" << current->jid << "]\t"; // job id
+            cout << current->stat << "\t"; // status
+            cout << current->cmd << endl; // the command itself
+
             return ;
         }
     }

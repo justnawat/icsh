@@ -21,6 +21,8 @@ I'll go through this Milestone by Milestone.
 
 -- MILESTONE 6 -- 
 - External commands CAN and WILL run in the background. However, it causes the prompt to be printed repeatedly after terminating/finishing.
+    - Only happens if the terminated child is run in the background.
+    - Somehow doesn't happen to foreground children, as far as I've tested.
 - jobs now works.
 - fg doesn't work.
 - bg also doesn't work.
