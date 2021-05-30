@@ -41,3 +41,6 @@ REFERENCE
 -- MILESTONE 7 -- 
 - changing color of the terminal to look nicer: https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
 - getting the username of a user: https://gist.github.com/krishna0512/5e5f8761a24ea850f0bd
+
+Me after finishing this project:
+![froggo](../assets/frogjump.gif?raw=true)
