@@ -41,7 +41,7 @@ void my_exit(string commandLine, int mode) {
     word >> command;
     if (word >> command) exit_code = stoi(command) & 0xff;
     else exit_code = 0;
-    if (mode == 0) cout << "\033[1;36mBye! See you later!\033[0m\n";
+    if (mode == 0) cout << TERMCYAN << "Bye! See you later!" << TERMRESET << endl;
     // free(prevcmd);
     exit(exit_code);
 }
@@ -49,7 +49,7 @@ void my_exit(string commandLine, int mode) {
 void f_ex(string commandLine) {
     pid_t pid = fork();
     if (pid < 0) {
-        cout << "\033[1;31micsh:\033[0m forking failed\n";
+        cout << TERMRED << "icsh:" << TERMRESET << " forking failed\n";
     } else if (pid == 0) { // child process
         if (!background) {
             pid = getpid();
@@ -122,7 +122,7 @@ void f_ex(string commandLine) {
             sleep(1);
             execvp(c_sarr[0], c_sarr);
             
-            cout << "\033[1;31micsh:\033[0m command not found\n";
+            cout << TERMRED << "icsh:" << TERMRESET << " command not found\n";
             exit(127); // according to bash, this is the exit code when a command is not found
         }
 
@@ -177,7 +177,7 @@ void doubleBang(int mode) {
         if (mode == 0) cout << oldcommand << endl;
         dbrun(oldcommand, mode);
     } else {
-        if (mode == 0) cout << "\033[1;31micsh:\033[1;31m command not found\n";
+        if (mode == 0) cout << TERMRED << "icsh:" << " command not found\n";
     }
 }
 

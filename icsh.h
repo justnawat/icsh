@@ -59,3 +59,6 @@ int inf_count;
 
 // MILESTONE 7
 string username; // get username of user
+#define TERMRED "\033[1;31m"
+#define TERMRESET "\033[0m"
+#define TERMCYAN "\033[1;36m"

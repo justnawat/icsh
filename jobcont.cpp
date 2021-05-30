@@ -132,3 +132,17 @@ void d_job() {
     }
     return ;
 }
+
+void popid(pid_t pid) {
+    jobNode* current;
+    jobNode* next;
+
+    for (current = head; current != NULL; current = current->next) {
+        if (current->next->jpid == pid) {
+            next = current->next->next;
+            free(current->next);
+            current->next = next;
+        }
+    }
+    cout << endl;
+}

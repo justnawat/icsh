@@ -12,7 +12,7 @@ string trim(string st) {
 int main(int argc, char * argv[]) {
 	last_status = 0;
 	username = getenv("USER");
-	prompt = "\033[1;36m" + username + "@icsh> \033[0m";
+	prompt = TERMCYAN + username + "@icsh> " + TERMRESET;
 
     // default handling just setting up
 	default_action.sa_handler = SIG_IGN;
@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 
 	// this is where the shell actually starts
 	if (argc == 1) { // runs in interactive mode
-		cout << "\033[1;36mInitiliazing IC Shell...\033[0m";
+		cout << TERMCYAN << "Initiliazing IC Shell..." << TERMRESET;
 		cout << endl << prompt;
 
 		while (1) {
@@ -49,7 +49,8 @@ int main(int argc, char * argv[]) {
 			if (cin.eof()) {
 				// getline(cin, commandLine);
 				// cout << commandLine << endl;
-				cout << endl << "\033[1;31micsh:\033[0m guess i'll die  ¯\\_(ツ)_/¯" << endl; 
+				cout << endl << TERMRED << "icsh:" << TERMRESET;
+				cout << " guess i'll die  ¯\\_(ツ)_/¯" << endl; 
 				break;
 				// continue;
 			}if (commandLine[0] == ' ') commandLine = trim(commandLine); // trim leading spaces
@@ -84,7 +85,7 @@ int main(int argc, char * argv[]) {
 					fin_fd = open(fin_name.c_str(), O_RDONLY); // open in read-only
 				
 					if (fin_fd < 0) { // can't open file
-						cout << "\033[1;31micsh:\033[0m cannot find input file\n";
+						cout << TERMRED << "icsh:" << TERMRESET << " cannot find input file\n";
 						break;
 					}
 
@@ -107,7 +108,7 @@ int main(int argc, char * argv[]) {
 					fout_fd = open(fout_name.c_str(), O_TRUNC | O_WRONLY | O_CREAT, 0644); 
 
 					if (fout_fd < 0) {
-						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+						cout << TERMRED << "icsh:" << TERMRESET << " cannot find/create output file\n";
 						break;
 					}
 
@@ -131,7 +132,7 @@ int main(int argc, char * argv[]) {
 					fout_fd = open(fout_name.c_str(), O_CREAT | O_WRONLY, 0644);
 
 					if (fin_fd < 0 || fout_fd < 0) {
-						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+						cout << TERMRED << "icsh:" << TERMRESET << " cannot find/create output file\n";
 						break;
 					}
 
@@ -154,7 +155,7 @@ int main(int argc, char * argv[]) {
 					break;
 
 				default:
-					cout << "\033[1;31micsh:\033[0m redirection failed\n";
+					cout << TERMRED << "icsh:" << TERMRESET << " redirection failed\n";
 			}
 			cout << prompt;
 			if (background) sleep(1);
@@ -162,7 +163,7 @@ int main(int argc, char * argv[]) {
 	} else { // runs in script mode
 		script.open(argv[1]);
 		if (!script.is_open()) {
-			cout << "\033[1;31micsh:\033[0m script not found\n";
+			cout << TERMRED << "icsh:" << TERMRESET << " script not found\n";
 			exit(127);
 		} else {
 			while (getline(script, commandLine)) {
@@ -195,7 +196,7 @@ int main(int argc, char * argv[]) {
 						fin_fd = open(fin_name.c_str(), O_RDONLY); // open in read-only
 						
 						if (fin_fd < 0) { // can't open file
-							cout << "\033[1;31micsh:\033[0m cannot find input file\n";
+							cout << TERMRED << "icsh:" << TERMRESET << " cannot find input file\n";
 							break;
 						}
 
@@ -218,7 +219,7 @@ int main(int argc, char * argv[]) {
 						fout_fd = open(fout_name.c_str(), O_TRUNC | O_WRONLY | O_CREAT, 0644); 
 					
 						if (fout_fd < 0) {
-							cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+							cout << TERMRED << "icsh:" << TERMRESET << " cannot find/create output file\n";
 							break;
 						}
 
@@ -242,7 +243,7 @@ int main(int argc, char * argv[]) {
 						fout_fd = open(fout_name.c_str(), O_CREAT | O_WRONLY, 0644);
 
 						if (fin_fd < 0 || fout_fd < 0) {
-							cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
+							cout << TERMRED << "icsh:" << TERMRESET << " cannot find/create output file\n";
 							break;
 						}
 
@@ -265,7 +266,7 @@ int main(int argc, char * argv[]) {
 						break;
 
 					default:
-						cout << "\033[1;31micsh:\033[0m redirection failed\n";
+						cout << TERMRED << "icsh:" << TERMRESET << " redirection failed\n";
 					
 				}
 				if (background) sleep(1);
