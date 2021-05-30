@@ -137,12 +137,26 @@ void popid(pid_t pid) {
     jobNode* current;
     jobNode* next;
 
-    for (current = head; current != NULL; current = current->next) {
-        if (current->next->jpid == pid) {
-            next = current->next->next;
-            free(current->next);
-            current->next = next;
+    if (head == tail) { // has only 1 node
+        free(head);
+        head = NULL;
+        tail = NULL;
+    } else if (head->next == tail) { // has 2 nodes
+        if (head->jpid == pid) {
+            free(head);
+            head = tail;
+        } else {
+            free(tail);
+            tail = head;
+        }
+    } else { // has 3 nodes or more
+        // the node after the next still exists
+        for (current = head; current->next->next != NULL; current = current->next) {
+            if (current->next->jpid == pid) { // the next node is the node to pop
+                next = current->next->next; // the new next node is the node after the next one
+                free(current->next); // frees the next node
+                current->next = next; // the next node becomes the new next node from L156
+            }
         }
     }
-    cout << endl;
 }

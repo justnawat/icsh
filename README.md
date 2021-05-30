@@ -8,13 +8,14 @@ GOOD-TO-KNOWS AND PROBLEMS
 - Milestone5 
     - With my implementation, the shell IS made to have a pause after using redirection for accuracy issues
 - Milestone6 
-    - External commands CAN and WILL run in the background. However, it causes the basically commit suicide after terminating/finishing.
-        - Only happens if the terminated child is run in the background.
+    - External commands CAN and WILL run in the background. However, it causes the shell to basically commit suicide after terminating/finishing.
+        - Only happens if the terminated child is run in the background for some reason.
         - Somehow doesn't happen to foreground children, as far as I've tested.
     - jobs now works.
         - However, I couldn't figure out a way to delete terminated jobs or change the state of the process so it might always end up as "running".
     - fg doesn't work.
     - bg also doesn't work. 
+    - Most of the codes for Milestone 6 are in jobcont.cpp and they look almost like psuedo codes.
 
 ---------
 REFERENCE

@@ -135,6 +135,7 @@ void f_ex(string commandLine) {
             int status;
             // int waitreturn;
             waitpid(pid, &status, WUNTRACED);
+            popid(pid);
             // cout << "waitreturn: " << waitreturn << endl;
 
             tcsetpgrp(0, shell_id); // gets back terminal control
