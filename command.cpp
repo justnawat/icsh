@@ -93,7 +93,7 @@ void f_ex(string commandLine) {
         } else {
             pid = getpid();
             setpgid(pid, pid);
-            tcsetpgrp(0, pid);
+            // tcsetpgrp(0, pid);
 
             // for executing external commands in c++
             int my_argc = 0;
@@ -184,6 +184,7 @@ void doubleBang(int mode) {
 void run(string commandLine, int mode) {
 
 	stringstream word(commandLine);
+	// if (word.eof()) {cout << "WRONG2" << endl;}
 	word >> command;
     if (!(command == "!!" || command == "exit")) oldcommand = commandLine;
 

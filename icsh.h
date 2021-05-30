@@ -10,6 +10,7 @@
 #include <string.h>
 #include <string>
 #include <sstream>
+#include <bits/stdc++.h>
 
 // DEALING WITH SYSTEM CALLS
 #include <unistd.h>
@@ -54,6 +55,7 @@ int redir_flag; // checks if there is need to redirect
 
 // MILESTONE 6
 bool background;
+int inf_count;
 
 // MILESTONE 7
 string username; // get username of user

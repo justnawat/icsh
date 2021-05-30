@@ -42,15 +42,23 @@ int main(int argc, char * argv[]) {
 		cout << endl << prompt;
 
 		while (1) {
+			inf_count++;
 			getline(cin, commandLine); // get a line from the command line
 			
 			if (commandLine[0] == ' ') commandLine = trim(commandLine); // trim leading spaces
+			if (cin.eof()) {
+				// getline(cin, commandLine);
+				// cout << commandLine << endl;
+				cout << endl << "\033[1;31micsh:\033[0m guess i'll die  ¯\\_(ツ)_/¯" << endl; 
+				break;
+				// continue;
+			}if (commandLine[0] == ' ') commandLine = trim(commandLine); // trim leading spaces
 			if (commandLine.length() == 0) { // empty commmand
+				// cout << "WRONG" << endl;
 				cout << prompt;
 				continue;
 			}
-
-			// cout << commandLine.substr(commandLine.length() - 2, 2) << endl;
+				
 			if (commandLine.substr(commandLine.length() - 2, 2) == " &") {
 				// cout << "is background" << endl;
 				background = true;
@@ -61,7 +69,7 @@ int main(int argc, char * argv[]) {
 			// not empty command
 			int fin_fd, fout_fd, saved_stdin, saved_stdout;
 			string fin_name, fout_name;
-			
+		
 			redir_flag = redirc(commandLine); // sees if there is any redirection
 			// cout << "case is : " << redir_flag << endl;
 			switch(redir_flag) {
@@ -74,10 +82,10 @@ int main(int argc, char * argv[]) {
 					// cout << "case 0b01\n";
 					fin_name = find_rein(commandLine); // find file name
 					fin_fd = open(fin_name.c_str(), O_RDONLY); // open in read-only
-					
+				
 					if (fin_fd < 0) { // can't open file
 						cout << "\033[1;31micsh:\033[0m cannot find input file\n";
-						continue;
+						break;
 					}
 
 					// duplicate, run, and close
@@ -97,10 +105,10 @@ int main(int argc, char * argv[]) {
 					// cout << "case 0b10\n";
 					fout_name = find_reout(commandLine); // find output name
 					fout_fd = open(fout_name.c_str(), O_TRUNC | O_WRONLY | O_CREAT, 0644); 
-				
+
 					if (fout_fd < 0) {
 						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
-						continue;
+						break;
 					}
 
 					saved_stdout = dup(STDOUT_FILENO);
@@ -124,7 +132,7 @@ int main(int argc, char * argv[]) {
 
 					if (fin_fd < 0 || fout_fd < 0) {
 						cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
-						continue;
+						break;
 					}
 
 					saved_stdin = dup(STDIN_FILENO);
@@ -188,7 +196,7 @@ int main(int argc, char * argv[]) {
 						
 						if (fin_fd < 0) { // can't open file
 							cout << "\033[1;31micsh:\033[0m cannot find input file\n";
-							continue;
+							break;
 						}
 
 						// duplicate, run, and close
@@ -211,7 +219,7 @@ int main(int argc, char * argv[]) {
 					
 						if (fout_fd < 0) {
 							cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
-							continue;
+							break;
 						}
 
 						saved_stdout = dup(STDOUT_FILENO);
@@ -235,7 +243,7 @@ int main(int argc, char * argv[]) {
 
 						if (fin_fd < 0 || fout_fd < 0) {
 							cout << "\033[1;31micsh:\033[0m cannot find/create output file\n";
-							continue;
+							break;
 						}
 
 						saved_stdin = dup(STDIN_FILENO);

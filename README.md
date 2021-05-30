@@ -1,7 +1,24 @@
-In this README file, I'd like to share the references that I used for completing this project.
+In this README file, I'd like to share the references that I used for completing this project and the "good-to-know" things about my shell or problems I found along the way.
 
 I'll go through this Milestone by Milestone.
 
+--------------------------
+GOOD-TO-KNOWS AND PROBLEMS
+--------------------------
+- Milestone5 
+    - With my implementation, the shell IS made to have a pause after using redirection for accuracy issues
+- Milestone6 
+    - External commands CAN and WILL run in the background. However, it causes the basically commit suicide after terminating/finishing.
+        - Only happens if the terminated child is run in the background.
+        - Somehow doesn't happen to foreground children, as far as I've tested.
+    - jobs now works.
+        - However, I couldn't figure out a way to delete terminated jobs or change the state of the process so it might always end up as "running".
+    - fg doesn't work.
+    - bg also doesn't work. 
+
+---------
+REFERENCE
+---------
 -- MILESTONE 1&2 --
 - getting blank lines (for empty commands): https://www.geeksforgeeks.org/how-to-use-getline-in-c-when-there-are-black-lines-in-input/
 - splitting strings (for how I implemented my echo): https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
@@ -20,12 +37,6 @@ I'll go through this Milestone by Milestone.
 - returning to using stdin and stdout after using dup2(): https://stackoverflow.com/questions/11042218/c-restore-stdout-to-terminal
 
 -- MILESTONE 6 -- 
-- External commands CAN and WILL run in the background. However, it causes the prompt to be printed repeatedly after terminating/finishing.
-    - Only happens if the terminated child is run in the background.
-    - Somehow doesn't happen to foreground children, as far as I've tested.
-- jobs now works.
-- fg doesn't work.
-- bg also doesn't work.
 
 -- MILESTONE 7 -- 
 - changing color of the terminal to look nicer: https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
